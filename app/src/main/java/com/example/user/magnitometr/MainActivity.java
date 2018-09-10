@@ -10,6 +10,8 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -42,12 +44,22 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
     private float altha = 0.1f;
     private boolean state;
     private int timer=0;
-
+    Spinner spinner;
+    String [] acxios={"ускорение  вглубину","ускорениепо вертикали", "уско"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         state = false;
+        spinner=  findViewById(R.id.spinner);
+
+      ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, acxios);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+       spinner.setAdapter(arrayAdapter);
+
+
+
+       
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometr = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
