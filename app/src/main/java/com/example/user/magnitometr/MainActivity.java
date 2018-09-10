@@ -1,6 +1,7 @@
 package com.example.user.magnitometr;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,85 +17,157 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity  implements SensorEventListener {
-
-    private static final String TAG="MainAcrivity";
+public class MainActivity extends     AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager;
-    private Sensor mMagnitometr;
+
+    Sensor sensorAccelerometr;
     GraphView graph;
     private double graph2LastXValue = 5d;
+    private double graph2LastYValue = 5d;
+    private double graph2LastZValue = 5d;
     private Double[] dataPoints;
     LineGraphSeries<DataPoint> series;
-
+    LineGraphSeries<DataPoint> seriesX;
+    LineGraphSeries<DataPoint> seriesZ;
+    LineGraphSeries<DataPoint> seriesXX;
+    LineGraphSeries<DataPoint> seriesYY;
+    LineGraphSeries<DataPoint> seriesZZ;
     private Thread thread;
     private boolean plotData = true;
+    float xx;
+    float yy;
+    float zz;
+    private boolean graficflag = false;
+    private float On_1 = 1;
+    private float altha = 0.1f;
+    private boolean state;
+    private int timer=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        state = false;
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorAccelerometr = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        mMagnitometr = mSensorManager.getDefaultSensor(Sensor.
-               TYPE_MAGNETIC_FIELD);
-
-        List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-
-        for(int i=0; i<sensors.size(); i++){
-            Log.d(TAG, "onCreate: Sensor "+ i + ": " + sensors.get(i).toString());
-        }
-
-        if (mMagnitometr != null) {
-            mSensorManager.registerListener((SensorEventListener) this, mMagnitometr, SensorManager.SENSOR_DELAY_GAME);
-        }
-/////////
+        System.out.println(sensorAccelerometr);
         graph = (GraphView) findViewById(R.id.graph);
-
-        series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+        series = new LineGraphSeries<DataPoint>(new DataPoint[]{
                 new DataPoint(0, 0),
         });
+        series.setColor(Color.GREEN);
+
+        seriesX = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0, 0),
+
+        });
+        seriesX.setColor(Color.BLACK);
+
+        seriesZ = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0, 0),
+        });
+        seriesZ.setColor(Color.RED);
+
+        graph = (GraphView) findViewById(R.id.graph);
+        series = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0, 0),
+        });
+        series.setColor(Color.BLUE);
+
+        seriesXX = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0, 0),
+
+        });
+        seriesXX.setColor(Color.YELLOW);
+
+        seriesZZ = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0, 0),
+        });
+        seriesZZ.setColor(Color.LTGRAY);
+
+
+        seriesYY=new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0,0),
+        });
+        seriesYY.setColor(Color.MAGENTA);
+
+        graph.addSeries(seriesXX);
+        graph.addSeries(seriesYY);
+        graph.addSeries(seriesZZ);
+        graph.addSeries(seriesX);
         graph.addSeries(series);
+        graph.addSeries(seriesZ);
 
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(20);
-
         feedMultiple();
     }
+
     public void addEntry(SensorEvent event) {
         /*     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();*/
         float[] values = event.values;
         // Movement
         float x = values[0];
+        System.out.println(x);
         float y = values[1];
+        System.out.println(y);
+        float z = values[2];
+        System.out.println(z);
+
+        if (state) {
+            timer++;
+            if(timer % 5 == 0) {
+                System.out.println(timer);
+                // saveText(event);
+            }
+        }
+
 
         graph2LastXValue += 1d;
-        series.appendData(new DataPoint(graph2LastXValue, y), true, 20);
+        graph2LastYValue += 1d;
+        graph2LastZValue += 1d;
 
+        xx = (float) (On_1 + altha * (x - On_1));
+        yy = (float) (On_1 + altha * (y - On_1));
+        zz = (float) (On_1 + altha * (z - On_1));
+
+        series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
+        seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);
+        seriesZ.appendData(new DataPoint(graph2LastZValue, z), true, 20);
+        seriesXX.appendData(new DataPoint(graph2LastXValue,xx), true,20);
+        seriesYY.appendData(new DataPoint(graph2LastYValue,yy), true,20);
+        seriesZZ.appendData(new DataPoint(graph2LastZValue,zz), true,20);
         graph.addSeries(series);
+        graph.addSeries(seriesX);
+        graph.addSeries(seriesZ);
 
-        /*LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+//        if (!graficflag) {
+//            graph.removeSeries(seriesXX);
+//            graph.removeSeries(seriesYY);
+//            graph.removeSeries(seriesZZ);
+//        }
+//        else {
+        graph.addSeries(seriesXX);
+        graph.addSeries(seriesYY);
+        graph.addSeries(seriesZZ);
+
+//        }
+        //*добавление фильтра
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
                 new DataPoint(x, y),
         });
-        graph.addSeries(series);*/
+        graph.addSeries(series);
+    }
+    private void addDataPoint(double acceleration) {
+        dataPoints[499] = acceleration;
+    }
 
-        /*float accelationSquareRoot = (x * x + y * y + z * z)
-                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-        double acceleration = Math.sqrt(accelationSquareRoot);
-        long actualTime = System.currentTimeMillis();
-        graph2LastXValue += 1d;
-        series.appendData(new GraphView(accelationSquareRoot,));
-        addDataPoint(magnitometr);
-*/
-    }
-    private void addDataPoint(double magnitometr) {
-        dataPoints[499] = magnitometr;
-        //To change body of created methods use File | Settings | File Templates.
-    }
     private void feedMultiple() {
 
-        if (thread != null){
+        if (thread != null) {
             thread.interrupt();
         }
 
@@ -102,7 +175,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
 
             @Override
             public void run() {
-                while (true){
+                while (true) {
                     plotData = true;
                     try {
                         Thread.sleep(10);
@@ -116,6 +189,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
 
         thread.start();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -126,31 +200,30 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
         mSensorManager.unregisterListener(this);
 
     }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
-        /*     addEntry(event);*/
-        if(plotData){
+        if (plotData) {
             addEntry(event);
-
             plotData = false;
         }
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener((SensorEventListener) this, mMagnitometr, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, sensorAccelerometr, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onDestroy() {
-        mSensorManager.unregisterListener((SensorEventListener) MainActivity.this);
+        mSensorManager.unregisterListener(MainActivity.this);
         thread.interrupt();
         super.onDestroy();
     }
+
 }
