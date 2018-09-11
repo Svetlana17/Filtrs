@@ -10,8 +10,11 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -43,26 +46,61 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
     private float On_1 = 1;
     private float altha = 0.1f;
     private boolean state;
-    private int timer=0;
+    private int timer = 0;
     Spinner spinner;
-    String [] acxios={"ускорение  вглубину","ускорениепо вертикали", "уско"};
+    String[] acxios = {"ускорение  по х", "ускорение по y ", "ускорение по z "};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         state = false;
-        spinner=  findViewById(R.id.spinner);
-
-      ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, acxios);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       spinner.setAdapter(arrayAdapter);
-
-
-
-       
+        spinner = (Spinner)findViewById(R.id.spinner);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometr = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, acxios);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        ////
+      spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+              String item =  parent.getItemAtPosition(position).toString();
+              System.out.println(item);
+              switch (item){
+                  case "ускорение  по х":
+
+
+//                      graficflag = true;
+                      Toast toast = Toast.makeText(getApplicationContext(),
+                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
+                      toast.show();
+                      System.out.println(item + " " + id);
+                      break;
+                  case "ускорение по y ":
+//                      graficflag = false;
+                      Toast toasts = Toast.makeText(getApplicationContext(),
+                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
+                      toasts.show();
+                      System.out.println(item + " " + id);
+                      break;
+                  case "ускорение по z ":
+//                      graficflag = true;
+                      Toast toast1 = Toast.makeText(getApplicationContext(),
+                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
+                      toast1.show();
+                      System.out.println(item + " " + id);
+                      break;
+              }
+          }
+          @Override
+          public void onNothingSelected(AdapterView<?> parent) {
+
+          }
+      });
+
+
 
         System.out.println(sensorAccelerometr);
         graph = (GraphView) findViewById(R.id.graph);
@@ -156,22 +194,22 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
         graph.addSeries(seriesX);
         graph.addSeries(seriesZ);
 
-//        if (!graficflag) {
-//            graph.removeSeries(seriesXX);
-//            graph.removeSeries(seriesYY);
-//            graph.removeSeries(seriesZZ);
-//        }
-//        else {
+        if (!graficflag) {
+            graph.removeSeries(seriesXX);
+            graph.removeSeries(seriesYY);
+            graph.removeSeries(seriesZZ);
+        }
+        else {
         graph.addSeries(seriesXX);
         graph.addSeries(seriesYY);
         graph.addSeries(seriesZZ);
 
-//        }
+        }
         //*добавление фильтра
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(x, y),
-        });
-        graph.addSeries(series);
+//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
+//                new DataPoint(x, y),
+//        });
+//        graph.addSeries(series);
     }
     private void addDataPoint(double acceleration) {
         dataPoints[499] = acceleration;
@@ -201,6 +239,7 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
 
         thread.start();
     }
+
 
     @Override
     protected void onPause() {
@@ -237,5 +276,8 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
         thread.interrupt();
         super.onDestroy();
     }
+
+
+
 
 }
