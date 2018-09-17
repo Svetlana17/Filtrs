@@ -39,8 +39,6 @@ public class RunActivity extends AppCompatActivity implements View.OnClickListen
                 System.out.println(item);
                 switch (item){
                     case "ускорение  по х":
-
-
 //                      graficflag = true;
                         Toast toast = Toast.makeText(getApplicationContext(),
                                 "Ваш выбор: " + item, Toast.LENGTH_LONG);

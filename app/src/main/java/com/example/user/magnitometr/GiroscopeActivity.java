@@ -6,28 +6,29 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.util.List;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class MainActivity extends     AppCompatActivity implements SensorEventListener, View.OnClickListener {
+public class GiroscopeActivity extends AppCompatActivity implements  View.OnClickListener, SensorEventListener {
     private SensorManager mSensorManager;
 
 
@@ -36,7 +37,7 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
     private static final int GIROSCOPE = 2;
     private static final int LOAD_DATA_ID = 2;
 
-    Sensor sensorAccelerometr;
+    Sensor sensorGiroscope;
     GraphView graph;
     private double graph2LastXValue = 5d;
     private double graph2LastYValue = 5d;
@@ -72,7 +73,7 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
 //        spinner = (Spinner)findViewById(R.id.spinner);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorAccelerometr = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorGiroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 //        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, acxios);
 //        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        spinner.setAdapter(arrayAdapter);
@@ -115,7 +116,7 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
 //      });
 
 
-        System.out.println(sensorAccelerometr);
+        System.out.println(sensorGiroscope);
         graph = (GraphView) findViewById(R.id.graph);
         series = new LineGraphSeries<DataPoint>(new DataPoint[]{
                 new DataPoint(0, 0),
@@ -281,23 +282,18 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, sensorAccelerometr, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, sensorGiroscope, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onDestroy() {
-        mSensorManager.unregisterListener(MainActivity.this);
+        mSensorManager.unregisterListener(GiroscopeActivity.this);
         thread.interrupt();
         super.onDestroy();
     }
 
-    public void onClick(View v) {
-        Intent intent = new Intent();
-        intent.setClass(this, RunActivity.class);
 
-        startActivity(intent);
-        finish();
-    }
+
 
 
 //    @Override
@@ -364,5 +360,15 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
         return false;
     }
 //
-//
+
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        intent.setClass(this, Fitriroscope.class);
+
+        startActivity(intent);
+        finish();
+    }
+
 }
+
+

@@ -2,4 +2,7 @@
     <string name="app_name">SensorManager</string>
     <string name="title_activity_run">title_activity_run</string>
     <string name="filtr">Фильтрованное значение</string>
+    <string name="acselerometr">Акселерометр</string>
+    <string name="giroscope">Гироскоп</string>
+
 </resources>
