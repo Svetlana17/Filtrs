@@ -1,6 +1,7 @@
 package com.example.user.magnitometr;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -22,7 +24,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.List;
 
-public class MainActivity extends     AppCompatActivity implements SensorEventListener {
+public class MainActivity extends     AppCompatActivity implements SensorEventListener, View.OnClickListener {
     private SensorManager mSensorManager;
 
     Sensor sensorAccelerometr;
@@ -47,58 +49,60 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
     private float altha = 0.1f;
     private boolean state;
     private int timer = 0;
-    Spinner spinner;
-    String[] acxios = {"ускорение  по х", "ускорение по y ", "ускорение по z "};
-
+//    Spinner spinner;
+//    String[] acxios = {"ускорение  по х", "ускорение по y ", "ускорение по z "};
+    Button mButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mButton=(Button) findViewById(R.id.button);
+        mButton.setOnClickListener((View.OnClickListener) this);
         state = false;
-        spinner = (Spinner)findViewById(R.id.spinner);
+//        spinner = (Spinner)findViewById(R.id.spinner);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometr = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, acxios);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
-        ////
-      spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-              String item =  parent.getItemAtPosition(position).toString();
-              System.out.println(item);
-              switch (item){
-                  case "ускорение  по х":
-
-
-//                      graficflag = true;
-                      Toast toast = Toast.makeText(getApplicationContext(),
-                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
-                      toast.show();
-                      System.out.println(item + " " + id);
-                      break;
-                  case "ускорение по y ":
-//                      graficflag = false;
-                      Toast toasts = Toast.makeText(getApplicationContext(),
-                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
-                      toasts.show();
-                      System.out.println(item + " " + id);
-                      break;
-                  case "ускорение по z ":
-//                      graficflag = true;
-                      Toast toast1 = Toast.makeText(getApplicationContext(),
-                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
-                      toast1.show();
-                      System.out.println(item + " " + id);
-                      break;
-              }
-          }
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {
-
-          }
-      });
+//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, acxios);
+//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(arrayAdapter);
+//        ////
+//      spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//          @Override
+//          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//              String item =  parent.getItemAtPosition(position).toString();
+//              System.out.println(item);
+//              switch (item){
+//                  case "ускорение  по х":
+//
+//
+////                      graficflag = true;
+//                      Toast toast = Toast.makeText(getApplicationContext(),
+//                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
+//                      toast.show();
+//                      System.out.println(item + " " + id);
+//                      break;
+//                  case "ускорение по y ":
+////                      graficflag = false;
+//                      Toast toasts = Toast.makeText(getApplicationContext(),
+//                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
+//                      toasts.show();
+//                      System.out.println(item + " " + id);
+//                      break;
+//                  case "ускорение по z ":
+////                      graficflag = true;
+//                      Toast toast1 = Toast.makeText(getApplicationContext(),
+//                              "Ваш выбор: " + item, Toast.LENGTH_LONG);
+//                      toast1.show();
+//                      System.out.println(item + " " + id);
+//                      break;
+//              }
+//          }
+//          @Override
+//          public void onNothingSelected(AdapterView<?> parent) {
+//
+//          }
+//      });
 
 
 
@@ -277,7 +281,13 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
         super.onDestroy();
     }
 
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        intent.setClass(this, RunActivity.class);
 
+        startActivity(intent);
+        finish();
+    }
 
 
 }
