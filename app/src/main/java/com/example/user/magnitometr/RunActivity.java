@@ -25,10 +25,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-
+//Для фильтронных значений с акслерометра\
 public class RunActivity extends AppCompatActivity
         implements View.OnClickListener,
- SensorEventListener{
+ SensorEventListener {
 
     String[] data = {"Ось ох", "Ось оу", "Ось oz"};
     Button button;
@@ -55,11 +55,40 @@ public class RunActivity extends AppCompatActivity
     private float On_1 = 1;
     private float altha = 0.1f;
     private boolean state;
-    private int timer=0;
+    private int timer = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+
+        /////////
+          //        // адаптер
+ ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+    Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setAdapter(adapter);
+    // заголовок
+        spinner.setPrompt("Title");
+    // выделяем элемент
+        spinner.setSelection(2);
+    // устанавливаем обработчик нажатия
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+                                          {
+                                              @Override
+                                              public void onItemSelected(AdapterView<?> parent, View view,
+                                                                         int position, long id) {
+                                                  // показываем позиция нажатого элемента
+                                                  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
+                                              }
+
+                                              @Override
+                                              public void onNothingSelected(AdapterView<?> arg0) {
+                                              }
+                                          });
+
         button = findViewById(R.id.button);
         state = false;
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -81,20 +110,20 @@ public class RunActivity extends AppCompatActivity
         });
         seriesZ.setColor(Color.RED);
         seriesXX = new LineGraphSeries<DataPoint>(new DataPoint[]{
-        new DataPoint(0, 0),
+                new DataPoint(0, 0),
 
-    });
+        });
         seriesXX.setColor(Color.YELLOW);
 //
-    seriesZZ = new LineGraphSeries<DataPoint>(new DataPoint[]{
-        new DataPoint(0, 0),
-    });
+        seriesZZ = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0, 0),
+        });
         seriesZZ.setColor(Color.LTGRAY);
 
 //
-    seriesYY=new LineGraphSeries<DataPoint>(new DataPoint[]{
-        new DataPoint(0,0),
-    });
+        seriesYY = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(0, 0),
+        });
         seriesYY.setColor(Color.MAGENTA);
 
         graph.addSeries(seriesX);
@@ -109,40 +138,43 @@ public class RunActivity extends AppCompatActivity
         graph.getViewport().setMaxX(20);
         feedMultiple();
 
-        }
-//}
-        public void addEntry(SensorEvent event){
-            float[] values=event.values;
-            float x=values[0];
-            System.out.println(x);
-            float y=values[1];
-            System.out.println(y);
-            float z=values[2];
-            System.out.println(z);
+    }
 
-            graph2LastXValue +=1d;
-            graph2LastYValue +=1d;
-            graph2LastZValue +=1d;
-            xx = (float) (On_1 + altha * (x - On_1));
-            yy = (float) (On_1 + altha * (y - On_1));
-            zz = (float) (On_1 + altha * (z - On_1));
+    //}
+    public void addEntry(SensorEvent event) {
+        float[] values = event.values;
+        float x = values[0];
+        System.out.println(x);
+        float y = values[1];
+        System.out.println(y);
+        float z = values[2];
+        System.out.println(z);
 
-            series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
-            seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);
-            seriesZ.appendData(new DataPoint(graph2LastZValue, z), true, 20);
-            seriesXX.appendData(new DataPoint(graph2LastXValue,xx), true,20);
-            seriesYY.appendData(new DataPoint(graph2LastYValue,yy),true,20);
-            seriesZZ.appendData(new DataPoint(graph2LastZValue,zz),true,20);
-            graph.addSeries(series);
-            graph.addSeries(seriesX);
-            graph.addSeries(seriesZ);
-            graph.addSeries(seriesXX);
-            graph.addSeries(seriesYY);
-            graph.addSeries(seriesZZ);
-}
-private  void addDataPoint(double acceleration){
-        dataPoints[499]=acceleration;
-}
+        graph2LastXValue += 1d;
+        graph2LastYValue += 1d;
+        graph2LastZValue += 1d;
+        xx = (float) (On_1 + altha * (x - On_1));
+        yy = (float) (On_1 + altha * (y - On_1));
+        zz = (float) (On_1 + altha * (z - On_1));
+
+        series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
+        seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);
+        seriesZ.appendData(new DataPoint(graph2LastZValue, z), true, 20);
+        seriesXX.appendData(new DataPoint(graph2LastXValue, xx), true, 20);
+        seriesYY.appendData(new DataPoint(graph2LastYValue, yy), true, 20);
+        seriesZZ.appendData(new DataPoint(graph2LastZValue, zz), true, 20);
+        graph.addSeries(series);
+        graph.addSeries(seriesX);
+        graph.addSeries(seriesZ);
+        graph.addSeries(seriesXX);
+        graph.addSeries(seriesYY);
+        graph.addSeries(seriesZZ);
+    }
+
+    private void addDataPoint(double acceleration) {
+        dataPoints[499] = acceleration;
+    }
+
     private void feedMultiple() {
 
         if (thread != null) {
@@ -157,8 +189,7 @@ private  void addDataPoint(double acceleration){
                     plotData = true;
                     try {
                         Thread.sleep(500);
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
@@ -180,7 +211,7 @@ private  void addDataPoint(double acceleration){
 
     }
 
-//    @Override
+    //    @Override
     public void onSensorChanged(final SensorEvent event) {
         if (plotData) {
 //            addEntry(event);
@@ -208,10 +239,11 @@ private  void addDataPoint(double acceleration){
         }
     }
 
-//    @Override
+    //    @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -228,30 +260,6 @@ private  void addDataPoint(double acceleration){
 
 
 
-
-//        // адаптер
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-//        spinner.setAdapter(adapter);
-//        // заголовок
-//        spinner.setPrompt("Title");
-//        // выделяем элемент
-//        spinner.setSelection(2);
-//        // устанавливаем обработчик нажатия
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view,
-//                                       int position, long id) {
-//                // показываем позиция нажатого элемента
-//                Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-//            }
-//            @Override
-//            public void onNothingSelected(AdapterView<?> arg0) {
-//            }
-//        });
-//
 //
  public void onClick(View v) {
         Intent intent = new Intent();
