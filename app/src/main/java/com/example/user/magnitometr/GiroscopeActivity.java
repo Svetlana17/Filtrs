@@ -46,19 +46,17 @@ public class GiroscopeActivity extends AppCompatActivity implements  View.OnClic
     LineGraphSeries<DataPoint> series;
     LineGraphSeries<DataPoint> seriesX;
     LineGraphSeries<DataPoint> seriesZ;
-    LineGraphSeries<DataPoint> seriesXX;
-    LineGraphSeries<DataPoint> seriesYY;
-    LineGraphSeries<DataPoint> seriesZZ;
+
     private Thread thread;
     private boolean plotData = true;
-    float xx;
-    float yy;
-    float zz;
+
     private boolean graficflag = false;
-    private float On_1 = 1;
-    private float altha = 0.1f;
+    private double k=0.1;
     private boolean state;
     private int timer = 0;
+    private float alphaX;
+    private float alphaY;
+    private float alphaZ;
     //    Spinner spinner;
 //    String[] acxios = {"ускорение  по х", "ускорение по y ", "ускорение по z "};
     Button mButton;
@@ -140,26 +138,9 @@ public class GiroscopeActivity extends AppCompatActivity implements  View.OnClic
         });
         series.setColor(Color.BLUE);
 
-        seriesXX = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(0, 0),
-
-        });
-        seriesXX.setColor(Color.YELLOW);
-
-        seriesZZ = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(0, 0),
-        });
-        seriesZZ.setColor(Color.LTGRAY);
 
 
-        seriesYY = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(0, 0),
-        });
-        seriesYY.setColor(Color.MAGENTA);
 
-        graph.addSeries(seriesXX);
-        graph.addSeries(seriesYY);
-        graph.addSeries(seriesZZ);
         graph.addSeries(seriesX);
         graph.addSeries(series);
         graph.addSeries(seriesZ);
@@ -194,30 +175,28 @@ public class GiroscopeActivity extends AppCompatActivity implements  View.OnClic
         graph2LastYValue += 1d;
         graph2LastZValue += 1d;
 
-        xx = (float) (On_1 + altha * (x - On_1));
-        yy = (float) (On_1 + altha * (y - On_1));
-        zz = (float) (On_1 + altha * (z - On_1));
+        alphaX = (float) ((1-k)*x);
+        alphaY = (float) ((1-k)*y);
+        alphaZ = (float) ((1-k)*z);
 
         series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
         seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);
         seriesZ.appendData(new DataPoint(graph2LastZValue, z), true, 20);
-        seriesXX.appendData(new DataPoint(graph2LastXValue, xx), true, 20);
-        seriesYY.appendData(new DataPoint(graph2LastYValue, yy), true, 20);
-        seriesZZ.appendData(new DataPoint(graph2LastZValue, zz), true, 20);
+
         graph.addSeries(series);
         graph.addSeries(seriesX);
         graph.addSeries(seriesZ);
 
-        if (!graficflag) {
-            graph.removeSeries(seriesXX);
-            graph.removeSeries(seriesYY);
-            graph.removeSeries(seriesZZ);
-        } else {
-            graph.addSeries(seriesXX);
-            graph.addSeries(seriesYY);
-            graph.addSeries(seriesZZ);
-
-        }
+//        if (!graficflag) {
+//            graph.removeSeries(seriesXX);
+//            graph.removeSeries(seriesYY);
+//            graph.removeSeries(seriesZZ);
+//        } else {
+//            graph.addSeries(seriesXX);
+//            graph.addSeries(seriesYY);
+//            graph.addSeries(seriesZZ);
+//
+//        }
         //*добавление фильтра
 //        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
 //                new DataPoint(x, y),

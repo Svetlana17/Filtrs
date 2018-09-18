@@ -5,25 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GiroscopeActivity">
+
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="460dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="163dp" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="150dp"
         android:layout_height="40dp"
-        android:text="@string/filtr"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="19dp"
         android:background="#4056ff"
-        />
+        android:text="@string/filtr"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="79dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button_main"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="#4056ff"
+        android:text="На главную"
+        tools:layout_editor_absoluteX="226dp"
+        tools:layout_editor_absoluteY="79dp"
+        tools:ignore="MissingConstraints" />
 
 
 </android.support.constraint.ConstraintLayout>

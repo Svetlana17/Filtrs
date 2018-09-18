@@ -8,8 +8,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,9 +28,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 //Для фильтронных значений с акслерометра\
-public class RunActivity extends AppCompatActivity
-        implements View.OnClickListener,
- SensorEventListener {
+public class RunActivity extends AppCompatActivity implements
+
+ SensorEventListener, View.OnClickListener {
+
 
     String[] data = {"Ось ох", "Ось оу", "Ось oz"};
     Button button;
@@ -52,22 +55,30 @@ public class RunActivity extends AppCompatActivity
     float yy;
     float zz;
     private boolean graficflag = false;
+    private boolean isGraficflagOX=false;
     private float On_1 = 1;
     private float altha = 0.1f;
     private boolean state;
     private int timer = 0;
+    Button mbutton;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+      mbutton=(Button)findViewById(R.id.button);
+/*
+*/
+
+
 
         /////////
           //        // адаптер
  ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-    Spinner spinner = (Spinner) findViewById(R.id.spinner);
+    final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setAdapter(adapter);
     // заголовок
         spinner.setPrompt("Title");
@@ -76,19 +87,23 @@ public class RunActivity extends AppCompatActivity
     // устанавливаем обработчик нажатия
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 
-                                          {
-                                              @Override
-                                              public void onItemSelected(AdapterView<?> parent, View view,
-                                                                         int position, long id) {
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                                   // показываем позиция нажатого элемента
-                                                  Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-                                              }
-
-                                              @Override
-                                              public void onNothingSelected(AdapterView<?> arg0) {
-                                              }
-                                          });
-        ////////
+                Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
+                graph = (GraphView) findViewById(R.id.graph);
+                String selected = parent.getItemAtPosition(position).toString();
+//                   if(position "0"){
+//                       graph.removeSeries(seriesXX);
+//                   }
+ }
+//
+                @Override
+                public void onNothingSelected(AdapterView<?> arg0) {
+                }
+                });
+        //////
 
         button = findViewById(R.id.button);
         state = false;
@@ -140,7 +155,16 @@ public class RunActivity extends AppCompatActivity
         feedMultiple();
 
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     //}
     public void addEntry(SensorEvent event) {
         float[] values = event.values;
@@ -164,12 +188,17 @@ public class RunActivity extends AppCompatActivity
         seriesXX.appendData(new DataPoint(graph2LastXValue, xx), true, 20);
         seriesYY.appendData(new DataPoint(graph2LastYValue, yy), true, 20);
         seriesZZ.appendData(new DataPoint(graph2LastZValue, zz), true, 20);
-        graph.addSeries(series);
+
+
+
+
         graph.addSeries(seriesX);
         graph.addSeries(seriesZ);
         graph.addSeries(seriesXX);
         graph.addSeries(seriesYY);
         graph.addSeries(seriesZZ);
+
+
     }
 
     private void addDataPoint(double acceleration) {
@@ -259,17 +288,13 @@ public class RunActivity extends AppCompatActivity
     }
 
 
-
-
-//
- public void onClick(View v) {
-        Intent intent = new Intent();
-        intent.setClass(this, MainActivity.class);
-
+         public void onClick(View v) {
+        Intent intent=new Intent(this, MainActivity.class);
         startActivity(intent);
-        finish();
+         finish();
     }
 
 
-     }
-//}
+
+
+}

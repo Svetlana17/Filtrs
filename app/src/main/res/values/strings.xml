@@ -4,5 +4,6 @@
     <string name="filtr">Фильтрованное значение</string>
     <string name="acselerometr">Акселерометр</string>
     <string name="giroscope">Гироскоп</string>
-
+    <string name="MOVENENT">Перемещение</string>
+    <string name="FILRTNCH">Фильтр нижних частот</string>
 </resources>

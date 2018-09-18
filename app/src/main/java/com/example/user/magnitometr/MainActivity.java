@@ -34,6 +34,7 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
     private static final String LOG_TAG = "my_tag";
     private static final int REFRESH_ID = 1;
     private static final int GIROSCOPE = 2;
+    private static final int MOVENENT=3;//ПЕРЕМЕЩЕНИЕ
     private static final int LOAD_DATA_ID = 2;
 
     Sensor sensorAccelerometr;
@@ -328,9 +329,9 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        menu.add(0, REFRESH_ID, 1, R.string.acselerometr);
+//        menu.add(0, REFRESH_ID, 1, R.string.acselerometr);
         menu.add(0, GIROSCOPE, 2, R.string.giroscope);
-
+        menu.add(0, MOVENENT,3,R.string.MOVENENT);
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
@@ -340,16 +341,16 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
         switch (item.getItemId()) {
 //            case R.id.acselerometr:
 //                return true;
+//            case 1:
+////                // acselerometr
+////                Log.d(LOG_TAG, "action: acselerometr");
+////                return true;
+//                Intent intent = new Intent();
+//                intent.setClass(this, MainActivity.class);
+//
+//                startActivity(intent);
+//                finish();
             case 1:
-//                // acselerometr
-//                Log.d(LOG_TAG, "action: acselerometr");
-//                return true;
-                Intent intent = new Intent();
-                intent.setClass(this, MainActivity.class);
-
-                startActivity(intent);
-                finish();
-            case 2:
                 // load data
 //                Log.d(LOG_TAG, "action: load data");
 //                return true;
@@ -359,6 +360,17 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
                 intents.setClass(this, GiroscopeActivity.class);
 
                 startActivity(intents);
+                finish();
+            case 2:
+                // load data
+//                Log.d(LOG_TAG, "action: load data");
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+                Intent intentss = new Intent();
+                intentss.setClass(this, MovenentActivity.class);
+
+                startActivity(intentss);
                 finish();
         }
         return false;
