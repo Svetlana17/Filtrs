@@ -88,6 +88,7 @@ public class RunActivity extends AppCompatActivity
                                               public void onNothingSelected(AdapterView<?> arg0) {
                                               }
                                           });
+        ////////
 
         button = findViewById(R.id.button);
         state = false;
