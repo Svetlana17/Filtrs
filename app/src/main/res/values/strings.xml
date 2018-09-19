@@ -6,4 +6,6 @@
     <string name="giroscope">Гироскоп</string>
     <string name="MOVENENT">Перемещение</string>
     <string name="FILRTNCH">Фильтр нижних частот</string>
+    <string name="Pereiti">Перейти</string>
+    <string name="Main">На главную</string>
 </resources>
