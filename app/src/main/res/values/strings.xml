@@ -8,4 +8,5 @@
     <string name="FILRTNCH">Фильтр нижних частот</string>
     <string name="Pereiti">Перейти</string>
     <string name="Main">На главную</string>
+    <string name="Kof">Коэффициент фильтрации</string>
 </resources>
