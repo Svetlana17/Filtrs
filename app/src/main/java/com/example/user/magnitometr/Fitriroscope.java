@@ -43,6 +43,7 @@ public class Fitriroscope extends AppCompatActivity implements  View.OnClickList
     LineGraphSeries<DataPoint> seriesZZ;
     private Thread thread;
     private boolean plotData = true;
+    float ALPHA=0.05f;
     float alphaX;
     float alphaY;
     float alphaZ;
@@ -159,6 +160,14 @@ public class Fitriroscope extends AppCompatActivity implements  View.OnClickList
             feedMultiple();
         }
 
+    protected float[] lowPassFilter( float[] input, float[] output ) {
+        if ( output == null ) return input;
+
+        for ( int i=0; i<input.length; i++ ) {
+            output[i] = output[i] + ALPHA * (input[i] - output[i]);
+        }
+        return output;
+    }
         public void addEntry(SensorEvent event) {
             /*     LineGraphSeries<DataPoint> series = new LineGraphSeries<>();*/
             float[] values = event.values;
@@ -183,9 +192,16 @@ public class Fitriroscope extends AppCompatActivity implements  View.OnClickList
             graph2LastYValue += 1d;
             graph2LastZValue += 1d;
 
-            alphaX = (float) (1-k)*x;
+           alphaX = (float) (1-k)*x;
             alphaY = (float) (1-k)*y;
             alphaZ = (float) (1-k)*z;
+
+
+
+
+
+
+
 
             series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
             seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);

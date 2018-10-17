@@ -31,12 +31,9 @@ import java.util.Date;
 public class RunActivity extends AppCompatActivity implements
 
  SensorEventListener, View.OnClickListener {
-
-
     String[] data = {"Ось ох", "Ось оу", "Ось oz"};
     Button button;
     private SensorManager mSensorManager;
-
     Sensor sensorAccelerometr;
     GraphView graph;
     private double graph2LastXValue = 5d;
@@ -51,7 +48,7 @@ public class RunActivity extends AppCompatActivity implements
     LineGraphSeries<DataPoint> seriesZZ;
     private Thread thread;
     private boolean plotData = true;
-    float xx;
+    int xx;
     float yy;
     float zz;
     private boolean graficflag = false;
@@ -61,23 +58,14 @@ public class RunActivity extends AppCompatActivity implements
     private boolean state;
     private int timer = 0;
     Button mbutton;
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
       mbutton=(Button)findViewById(R.id.button);
-/*
-*/
-
-
-
-        /////////
-          //        // адаптер
+               //        // адаптер
  ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
     final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setAdapter(adapter);
     // заголовок
@@ -98,14 +86,11 @@ public class RunActivity extends AppCompatActivity implements
 //                       graph.removeSeries(seriesXX);
 //                   }
  }
-//
-                @Override
+//                @Override
                 public void onNothingSelected(AdapterView<?> arg0) {
                 }
                 });
-        //////
-
-        button = findViewById(R.id.button);
+          button = findViewById(R.id.button);
         state = false;
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometr = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -117,7 +102,6 @@ public class RunActivity extends AppCompatActivity implements
         graph.addSeries(series);
         seriesX = new LineGraphSeries<DataPoint>(new DataPoint[]{
                 new DataPoint(0, 0),
-
         });
         seriesX.setColor(Color.BLACK);
 
@@ -165,6 +149,18 @@ public class RunActivity extends AppCompatActivity implements
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    protected float[] lowPassFilter( float[] input, float[] output ) {
+        if ( output == null ) return input;
+
+        for ( int i=0; i<input.length; i++ ) {
+            output[xx] = output[i] + altha * (input[i] - output[i]);
+        }
+        return output;
+    }
+
+
     //}
     public void addEntry(SensorEvent event) {
         float[] values = event.values;
@@ -178,9 +174,9 @@ public class RunActivity extends AppCompatActivity implements
         graph2LastXValue += 1d;
         graph2LastYValue += 1d;
         graph2LastZValue += 1d;
-        xx = (float) (On_1 + altha * (x - On_1));
-        yy = (float) (On_1 + altha * (y - On_1));
-        zz = (float) (On_1 + altha * (z - On_1));
+     // xx = (float) (On_1 + altha * (x - On_1));
+      //  yy = (float) (On_1 + altha * (y - On_1));
+      //  zz = (float) (On_1 + altha * (z - On_1));
 
         series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
         seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);
@@ -188,18 +184,11 @@ public class RunActivity extends AppCompatActivity implements
         seriesXX.appendData(new DataPoint(graph2LastXValue, xx), true, 20);
         seriesYY.appendData(new DataPoint(graph2LastYValue, yy), true, 20);
         seriesZZ.appendData(new DataPoint(graph2LastZValue, zz), true, 20);
-
-
-
-
         graph.addSeries(seriesX);
         graph.addSeries(seriesZ);
         graph.addSeries(seriesXX);
         graph.addSeries(seriesYY);
-        graph.addSeries(seriesZZ);
-
-
-    }
+        graph.addSeries(seriesZZ); }
 
     private void addDataPoint(double acceleration) {
         dataPoints[499] = acceleration;

@@ -22,7 +22,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".GiroscopeActivity" />
         <activity android:name=".Fitriroscope" />
-        <activity android:name=".MovenentActivity"></activity>
+        <activity android:name=".LowFiltrActivity"></activity>
     </application>
 
 </manifest>
