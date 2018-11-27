@@ -28,18 +28,19 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.List;
 
 import static android.view.KeyCharacterMap.ALPHA;
-import static com.example.user.magnitometr.AveragingFilter.DEFAULT_TIME_CONSTANT;
 
-public class MainActivity extends     AppCompatActivity implements SensorEventListener, View.OnClickListener {
+public class MainActivity extends     AppCompatActivity
+       implements SensorEventListener, View.OnClickListener
+ {
 
-
-    private static final String tag = LowPassFilter.class.getSimpleName();
-
-
-    private float[] output;
-
-        Button buttonS;
-        Button button;
+//
+//   // private static final String tag = LowPassFilter.class.getSimpleName();
+//
+//
+//    private float[] output;
+//
+//        Button buttonS;
+//        Button button;
         private SensorManager mSensorManager;
         Sensor sensorAccelerometr;
         GraphView graph;
@@ -59,9 +60,9 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
         float x;
         float yy;
         float zz;
-
-      protected float timeConstant;
-        private float altha = 0.05f;
+//
+//      protected float timeConstant;
+        private float altha = 0.5f;
         private boolean state;
         private int timer = 0;
         Button mbutton;
@@ -72,18 +73,13 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_run);
-            mbutton=(Button)findViewById(R.id.button);
+            setContentView(R.layout.activity_main);
 
 
 
-
-
-
-
-
-            button = findViewById(R.id.button);
-            state = false;
+     //            mbutton=(Button)findViewById(R.id.button);
+//            button = findViewById(R.id.button);
+//            state = false;
             mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
             sensorAccelerometr = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -133,93 +129,6 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
 
         }
 
-
-
-    public MainActivity() {
-        this(DEFAULT_TIME_CONSTANT);
-    }
-
-    public MainActivity(float timeConstant) {
-        this.timeConstant = timeConstant;
-      //  reset();
-    }
-
-    /**
-     * Add a sample.
-     *
-     * @param values
-     *            The acceleration data. A 1x3 matrix containing the data from the X, Y and Z axis of the sensor
-     *            noting that order is arbitrary.
-     * @return Returns the output of the fusedOrientation.
-     */
-    public float[] filter(float[] values)
-    {
-        // Initialize the start time.
-        if (startTime == 0)
-        {
-            startTime = System.nanoTime();
-        }
-
-        timestamp = System.nanoTime();
-
-        // Find the sample period (between updates) and convert from
-        // nanoseconds to seconds. Note that the sensor delivery rates can
-        // individually vary by a relatively large time frame, so we use an
-        // averaging technique with the number of sensor updates to
-        // determine the delivery rate.
-        float dt = 1 / (count++ / ((timestamp - startTime) / 1000000000.0f));
-
-        float alpha = timeConstant / (timeConstant + dt);
-
-        output[0] = alpha * output[0] + (1 - alpha) * values[0];
-        output[1] = alpha * output[1] + (1 - alpha) * values[1];
-        output[2] = alpha * output[2] + (1 - alpha) * values[2];
-
-        return output;
-    }
-
-    //@Override
-    public float[] getOutput() {
-        return output;
-    }
-
-    public void setTimeConstant(float timeConstant)
-    {
-        this.timeConstant = timeConstant;
-    }
-
-
-//    public void reset() {
-//        startTime = 0;
-//        timestamp = 0;
-//        count = 0;
-//    }
-//    public void reset()
-//    {
-//        super.reset();
-//        this.output = new float[]
-//                { 0, 0, 0 };
-//
-//    }
-//
-//
-
-
-
-    protected float[] lowPass( float[] input, float[] output ) {
-        if ( output == null ) return input;
-
-        for ( int i=0; i<input.length; i++ ) {
-            output[i] = output[i] + ALPHA * (input[i] - output[i]);
-        }
-        return output;
-    }
-
-
-
-
-
-    //}
         public void addEntry(SensorEvent event) {
             float[] values = event.values;
             float x = values[0];
@@ -238,20 +147,21 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
            //
 
             xx =xx+altha*(x-xx);
-            //  yy = (float) (On_1 + altha * (y - On_1));
-            //  zz = (float) (On_1 + altha * (z - On_1));
+            yy=yy+altha*(y-yy);
+            zz=zz+altha*(z-zz);
 
-         //   series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
-            seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);
-           // seriesZ.appendData(new DataPoint(graph2LastZValue, z), true, 20);
-            seriesXX.appendData(new DataPoint(graph2LastXValue, xx), true, 20);
-          //  seriesYY.appendData(new DataPoint(graph2LastYValue, yy), true, 20);
-           // seriesZZ.appendData(new DataPoint(graph2LastZValue, zz), true, 20);
-            graph.addSeries(seriesX);
-          //  graph.addSeries(seriesZ);
-            graph.addSeries(seriesXX);
-           // graph.addSeries(seriesYY);
-           // graph.addSeries(seriesZZ);
+           // series.appendData(new DataPoint(graph2LastYValue, y), true, 20);
+//            seriesX.appendData(new DataPoint(graph2LastXValue, x), true, 20);
+            seriesZ.appendData(new DataPoint(graph2LastZValue, z), true, 20);
+//            seriesXX.appendData(new DataPoint(graph2LastXValue, xx), true, 20);
+           // seriesYY.appendData(new DataPoint(graph2LastYValue, yy), true, 20);
+           seriesZZ.appendData(new DataPoint(graph2LastZValue, zz), true, 20);
+          //  graph.addSeries(seriesX);
+           // graph.addSeries(series);
+           graph.addSeries(seriesZ);
+           // graph.addSeries(seriesXX);
+           //graph.addSeries(seriesYY);
+            graph.addSeries(seriesZZ);
             }
 
         private void addDataPoint(double acceleration) {
@@ -342,14 +252,24 @@ public class MainActivity extends     AppCompatActivity implements SensorEventLi
             super.onDestroy();
         }
 
+// @Override
+//     public void onSensorChanged(SensorEvent event) {
+//
+//     }
+//
+//     @Override
+//     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//     }
 
+//     @Override
+//     public void onClick(View v) {
+//
+//     }
         public void onClick(View v) {
             Intent intent=new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         }
-
-
-
 
     }
